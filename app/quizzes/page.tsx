@@ -62,8 +62,6 @@ export default function QuizzesPage() {
       } else {
         setQuizzes(quizzesData || [])
       }
-
-      setLoading(false)
     }
 
     loadQuizzes()
