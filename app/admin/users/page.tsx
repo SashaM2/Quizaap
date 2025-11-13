@@ -31,7 +31,6 @@ export default function UsersManagementPage() {
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [roleFilter, setRoleFilter] = useState<string>("all")
-  const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [editingUser, setEditingUser] = useState<string | null>(null)
@@ -62,7 +61,6 @@ export default function UsersManagementPage() {
       if (profileError) {
         console.error("Erro ao buscar perfil:", profileError)
         setMessage({ type: "error", text: `${t("admin.errors.checkPermissions")}: ${profileError.message}` })
-        setLoading(false)
         return
       }
 
@@ -72,7 +70,6 @@ export default function UsersManagementPage() {
           type: "error", 
           text: t("admin.errors.profileNotFound")
         })
-        setLoading(false)
         return
       }
 
@@ -85,7 +82,6 @@ export default function UsersManagementPage() {
         setTimeout(() => {
           router.push("/")
         }, 2000)
-        setLoading(false)
         return
       }
 
@@ -105,8 +101,6 @@ export default function UsersManagementPage() {
         setUsers(userProfiles || [])
         setFilteredUsers(userProfiles || [])
       }
-
-      setLoading(false)
     }
 
     loadUsers()
@@ -211,23 +205,8 @@ export default function UsersManagementPage() {
     }
   }
 
-  if (!mounted || loading) {
-    return (
-      <div
-        style={{
-          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-          minHeight: "100vh",
-          background: "#ffffff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#111827",
-        }}
-        suppressHydrationWarning
-      >
-        <div style={{ fontSize: "1.125rem" }} suppressHydrationWarning>{t("common.loading")}</div>
-      </div>
-    )
+  if (!mounted) {
+    return null
   }
 
   if (!isAdmin) {

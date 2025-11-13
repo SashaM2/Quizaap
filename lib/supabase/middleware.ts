@@ -32,64 +32,71 @@ export async function updateSession(request: NextRequest) {
     },
   })
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // Allow access to public API routes and tracker
+  // Allow access to public API routes and tracker (early return to avoid getUser)
+  const pathname = request.nextUrl.pathname
   if (
-    request.nextUrl.pathname === "/tracker" ||
-    request.nextUrl.pathname.startsWith("/tracker/") ||
-    request.nextUrl.pathname.startsWith("/api/tracker/") ||
-    request.nextUrl.pathname.startsWith("/api/lead-form-widget") ||
-    request.nextUrl.pathname.startsWith("/api/event") ||
-    request.nextUrl.pathname.startsWith("/api/lead")
+    pathname === "/tracker" ||
+    pathname.startsWith("/tracker/") ||
+    pathname.startsWith("/api/tracker/") ||
+    pathname.startsWith("/api/lead-form-widget") ||
+    pathname.startsWith("/api/event") ||
+    pathname.startsWith("/api/lead") ||
+    pathname === "/" ||
+    pathname.startsWith("/auth")
   ) {
     return supabaseResponse
   }
 
-  // Allow access to public routes without authentication
-  if (request.nextUrl.pathname === "/" || request.nextUrl.pathname.startsWith("/auth")) {
-    return supabaseResponse
-  }
+  // Only check user for protected routes
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   // Redirect to login only for protected routes
-  if (!user && !request.nextUrl.pathname.startsWith("/auth") && !request.nextUrl.pathname.startsWith("/login")) {
+  if (!user && !pathname.startsWith("/auth") && !pathname.startsWith("/login")) {
     const url = request.nextUrl.clone()
     url.pathname = "/auth/login"
     return NextResponse.redirect(url)
   }
 
-  // Check if user is admin for admin routes
-  if (request.nextUrl.pathname.startsWith("/admin")) {
+  // Check if user is admin for admin routes (only when needed)
+  if (pathname.startsWith("/admin")) {
     if (!user) {
       const url = request.nextUrl.clone()
       url.pathname = "/auth/login"
       return NextResponse.redirect(url)
     }
 
-    // Check if user is admin
+    // Check if user is admin (cache this in cookie to avoid repeated queries)
+    const cachedRole = request.cookies.get("user_role")?.value
+    if (cachedRole === "admin") {
+      return supabaseResponse
+    }
+
     const { data: profile, error: profileError } = await supabase
       .from("user_profiles")
       .select("role")
       .eq("id", user.id)
       .single()
 
-    // Log para debug
-    if (profileError) {
-      console.error("[Middleware] Erro ao buscar perfil:", profileError)
-    }
-
-    if (!profile) {
+    if (profileError || !profile) {
       console.warn("[Middleware] Perfil não encontrado para usuário:", user.id)
-      // Tentar criar perfil automaticamente via API
       const url = request.nextUrl.clone()
       url.pathname = "/dashboard"
       return NextResponse.redirect(url)
     }
 
+    // Cache role in cookie for 5 minutes to reduce database queries
+    if (profile.role) {
+      supabaseResponse.cookies.set("user_role", profile.role, {
+        maxAge: 300, // 5 minutes
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      })
+    }
+
     if (profile.role !== "admin") {
-      console.warn("[Middleware] Usuário não é admin. Role:", profile.role)
       const url = request.nextUrl.clone()
       url.pathname = "/dashboard"
       return NextResponse.redirect(url)

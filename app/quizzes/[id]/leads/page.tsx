@@ -26,7 +26,6 @@ export default function QuizLeadsPage({ params }: { params: Promise<{ id: string
   const [mounted, setMounted] = useState(false)
   const [allLeads, setAllLeads] = useState<Lead[]>([])
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([])
-  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
   const [showModal, setShowModal] = useState(false)
@@ -63,7 +62,6 @@ export default function QuizLeadsPage({ params }: { params: Promise<{ id: string
       }
 
       await loadLeads()
-      setLoading(false)
     }
 
     loadData()
@@ -167,12 +165,8 @@ export default function QuizLeadsPage({ params }: { params: Promise<{ id: string
     document.body.removeChild(link)
   }
 
-  if (!mounted || loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center" suppressHydrationWarning>
-        <div className="text-lg" suppressHydrationWarning>Carregando...</div>
-      </div>
-    )
+  if (!mounted) {
+    return null
   }
 
   return (

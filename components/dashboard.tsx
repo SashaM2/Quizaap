@@ -106,7 +106,6 @@ export default function Dashboard() {
   })
   const [quizzes, setQuizzes] = useState<Quiz[]>([])
   const [analytics, setAnalytics] = useState<Analytics | null>(null)
-  const [loading, setLoading] = useState(true)
   const [deletingQuizId, setDeletingQuizId] = useState<string | null>(null)
   const [chartLoaded, setChartLoaded] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -489,22 +488,30 @@ export default function Dashboard() {
         return
       }
 
-      // Load dashboard stats
+      // Load dashboard stats (execute queries in parallel for better performance)
       try {
-        const { count: quizzesCount } = await supabase
-          .from("quizzes")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", user.id)
+        // Execute all queries in parallel
+        const [quizzesResult, quizzesDataResult] = await Promise.all([
+          supabase
+            .from("quizzes")
+            .select("id, title, url, tracking_code, created_at", { count: "exact" })
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("quizzes")
+            .select("id")
+            .eq("user_id", user.id),
+        ])
 
-        const { data: quizzes } = await supabase
-          .from("quizzes")
-          .select("id")
-          .eq("user_id", user.id)
-
-        const quizIds = quizzes?.map((q) => q.id) || []
+        const quizzesData = quizzesResult.data
+        const quizzesError = quizzesResult.error
+        const quizzesCount = quizzesResult.count || 0
+        const quizzes = quizzesDataResult.data || []
+        const quizIds = quizzes.map((q: { id: string }) => q.id)
 
         let sessionsCount = 0
 
+        // Only query sessions if there are quizzes
         if (quizIds.length > 0) {
           const { count: sessions } = await supabase
             .from("sessions")
@@ -515,21 +522,15 @@ export default function Dashboard() {
         }
 
         setStats({
-          totalQuizzes: quizzesCount || 0,
+          totalQuizzes: quizzesCount,
           totalSessions: sessionsCount,
         })
-
-        // Load recent quizzes
-        const { data: quizzesData, error: quizzesError } = await supabase
-          .from("quizzes")
-          .select("id, title, url, tracking_code, created_at")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false })
 
         if (quizzesError) {
           console.error("Error loading quizzes:", quizzesError)
         }
 
+        // Process quizzes data
         const quizzesMap = new Map<string, Quiz>()
         if (quizzesData) {
           for (const quiz of quizzesData) {
@@ -550,8 +551,6 @@ export default function Dashboard() {
         await loadAnalytics()
       } catch (error) {
         console.error("Error loading stats:", error)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -856,25 +855,9 @@ export default function Dashboard() {
     doc.save(fileName)
   }
 
-  if (!mounted || loading) {
-    return (
-      <div
-        style={{
-          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-          background: "#0f172a",
-          color: "#e2e8f0",
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        suppressHydrationWarning
-      >
-        <div style={{ fontSize: "1.125rem" }} suppressHydrationWarning>
-          {t("common.loading")}
-        </div>
-      </div>
-    )
+  // Render immediately without loading screen
+  if (!mounted) {
+    return null
   }
 
   const funnel = analytics?.funnel || {

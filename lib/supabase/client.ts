@@ -1,6 +1,14 @@
 import { createBrowserClient } from "@supabase/ssr"
 
+// Cache the client instance to avoid recreating it on every call
+let supabaseClient: ReturnType<typeof createBrowserClient> | null = null
+
 export function createClient() {
+  // Return cached client if it exists
+  if (supabaseClient) {
+    return supabaseClient
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -13,5 +21,7 @@ export function createClient() {
     )
   }
 
-  return createBrowserClient(url, key)
+  // Create and cache the client
+  supabaseClient = createBrowserClient(url, key)
+  return supabaseClient
 }

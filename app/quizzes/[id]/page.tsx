@@ -32,7 +32,6 @@ export default function QuizDetailsPage({ params }: { params: Promise<{ id: stri
   const [mounted, setMounted] = useState(false)
   const [quiz, setQuiz] = useState<Quiz | null>(null)
   const [analytics, setAnalytics] = useState<Analytics | null>(null)
-  const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState("")
@@ -94,7 +93,6 @@ export default function QuizDetailsPage({ params }: { params: Promise<{ id: stri
         console.error("Error loading analytics:", error)
       }
 
-      setLoading(false)
     }
 
     loadData()
@@ -199,23 +197,8 @@ export default function QuizDetailsPage({ params }: { params: Promise<{ id: stri
     }
   }
 
-  if (!mounted || loading) {
-    return (
-      <div
-        style={{
-          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-          background: "#ffffff",
-          color: "#111827",
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        suppressHydrationWarning
-      >
-        <div style={{ fontSize: "1.125rem" }} suppressHydrationWarning>Carregando...</div>
-      </div>
-    )
+  if (!mounted) {
+    return null
   }
 
   if (!quiz) {

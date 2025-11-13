@@ -36,7 +36,6 @@ export default function LeadsManagementPage() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([])
   const [quizzes, setQuizzes] = useState<Quiz[]>([])
-  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -148,11 +147,10 @@ export default function LeadsManagementPage() {
 
       // Get all quizzes for user
       const { data: quizzesData } = await supabase.from("quizzes").select("id, title").eq("user_id", user.id)
-      const quizIds = quizzesData?.map((q) => q.id) || []
+      const quizIds = quizzesData?.map((q: { id: string }) => q.id) || []
 
       if (quizIds.length === 0) {
         setLeads([])
-        setLoading(false)
         return
       }
 
@@ -166,7 +164,7 @@ export default function LeadsManagementPage() {
       if (error) throw error
 
       // Get session data for leads
-      const sessionIds = leadsData?.map((l) => l.session_id).filter(Boolean) || []
+      const sessionIds = leadsData?.map((l: { session_id?: string }) => l.session_id).filter(Boolean) || []
       let sessionsData: any[] = []
       
       if (sessionIds.length > 0) {
@@ -181,8 +179,8 @@ export default function LeadsManagementPage() {
       const sessionMap = new Map(sessionsData.map(s => [s.id, s]))
 
       // Map quiz titles and calculate scores
-      const leadsWithData = (leadsData || []).map((lead) => {
-        const quiz = quizzesData?.find((q) => q.id === lead.quiz_id)
+      const leadsWithData = (leadsData || []).map((lead: any) => {
+        const quiz = quizzesData?.find((q: { id: string }) => q.id === lead.quiz_id)
         const sessionData = sessionMap.get(lead.session_id)
         const score = calculateLeadScore(lead, sessionData)
         const scoreCategory = getScoreCategory(score)
@@ -199,9 +197,7 @@ export default function LeadsManagementPage() {
       setLeads(leadsWithData)
     } catch (error) {
       console.error("Error loading leads:", error)
-    } finally {
-      setLoading(false)
-    }
+      }
   }
 
   const applyFilters = () => {
@@ -339,21 +335,8 @@ ${"=".repeat(50)}`
     return acc
   }, {} as Record<string, number>)
 
-  if (!mounted || loading) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#ffffff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#111827",
-        }}
-      >
-        Carregando...
-      </div>
-    )
+  if (!mounted) {
+    return null
   }
 
   return (

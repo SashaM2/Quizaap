@@ -37,7 +37,6 @@ export default function QuizAnalyticsPage({ params }: { params: Promise<{ id: st
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
   const [analytics, setAnalytics] = useState<Analytics | null>(null)
-  const [loading, setLoading] = useState(true)
   const [chartLoaded, setChartLoaded] = useState(false)
   const funnelChartRef = useRef<HTMLCanvasElement>(null)
   const abandonmentChartRef = useRef<HTMLCanvasElement>(null)
@@ -181,7 +180,6 @@ export default function QuizAnalyticsPage({ params }: { params: Promise<{ id: st
       }
 
       await loadAnalytics()
-      setLoading(false)
     }
 
     loadData()
@@ -189,13 +187,11 @@ export default function QuizAnalyticsPage({ params }: { params: Promise<{ id: st
 
   // Auto-refresh every 10 seconds
   useEffect(() => {
-    if (!loading) {
-      const interval = setInterval(() => {
-        loadAnalytics()
-      }, 10000)
-      return () => clearInterval(interval)
-    }
-  }, [loading, loadAnalytics])
+    const interval = setInterval(() => {
+      loadAnalytics()
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [loadAnalytics])
 
   useEffect(() => {
     if (chartLoaded && analytics) {
@@ -203,12 +199,8 @@ export default function QuizAnalyticsPage({ params }: { params: Promise<{ id: st
     }
   }, [chartLoaded, analytics])
 
-  if (!mounted || loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center" suppressHydrationWarning>
-        <div className="text-lg" suppressHydrationWarning>Carregando...</div>
-      </div>
-    )
+  if (!mounted) {
+    return null
   }
 
   if (!analytics) {
