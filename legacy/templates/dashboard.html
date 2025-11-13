@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Tracker - Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #f1f5f9;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .card-title {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-metric {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        .card.highlight {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            border-color: #3b82f6;
+        }
+        
+        .card.highlight .card-value {
+            color: #ffffff;
+        }
+        
+        .funnel-table {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #0f172a;
+            border-bottom: 1px solid #334155;
+            font-weight: 600;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid #334155;
+            align-items: center;
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-row:hover {
+            background: #0f172a;
+        }
+        
+        .progress-bar {
+            background: #334155;
+            border-radius: 4px;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            color: #f1f5f9;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            height: 400px;
+        }
+        
+        .chart-container canvas {
+            max-height: 350px;
+        }
+        
+        .table-container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .abandonment-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid #334155;
+            align-items: center;
+        }
+        
+        .abandonment-row:hover {
+            background: #0f172a;
+        }
+        
+        .abandonment-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #0f172a;
+            border-bottom: 1px solid #334155;
+            font-weight: 600;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .badge-high {
+            background: #7c2d12;
+            color: #fed7aa;
+        }
+        
+        .badge-medium {
+            background: #78350f;
+            color: #fef3c7;
+        }
+        
+        .badge-low {
+            background: #143c1c;
+            color: #86efac;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quiz Analytics Dashboard</h1>
+            <p class="subtitle">Track visitor behavior, abandonment, and lead conversion in real-time</p>
+        </header>
+        
+        <!-- Conversion Funnel -->
+        <div class="dashboard-grid">
+            <div class="card highlight">
+                <div class="card-title">Total Visitors</div>
+                <div class="card-value" id="total-visitors">0</div>
+                <div class="card-metric">Unique sessions</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Quiz Started</div>
+                <div class="card-value" id="quiz-started">0</div>
+                <div class="card-metric" id="start-rate">0%</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Quiz Completed</div>
+                <div class="card-value" id="quiz-completed">0</div>
+                <div class="card-metric" id="completion-rate">0%</div>
+            </div>
+            <div class="card highlight">
+                <div class="card-title">Total Leads</div>
+                <div class="card-value" id="total-leads">0</div>
+                <div class="card-metric" id="conversion-rate">0%</div>
+            </div>
+        </div>
+        
+        <!-- Conversion Funnel Table -->
+        <h2 class="section-title">Conversion Funnel</h2>
+        <div class="funnel-table">
+            <div class="table-header">
+                <div>Stage</div>
+                <div>Count</div>
+                <div>Rate (%)</div>
+                <div>Progress</div>
+            </div>
+            <div class="table-row" id="stage-visitors">
+                <div>Visitors</div>
+                <div id="visitors-count">0</div>
+                <div>100%</div>
+                <div><div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div></div>
+            </div>
+            <div class="table-row" id="stage-started">
+                <div>Quiz Started</div>
+                <div id="started-count">0</div>
+                <div id="started-rate">0%</div>
+                <div><div class="progress-bar"><div class="progress-fill" id="started-bar" style="width: 0%;"></div></div></div>
+            </div>
+            <div class="table-row" id="stage-completed">
+                <div>Quiz Completed</div>
+                <div id="completed-count">0</div>
+                <div id="completed-rate">0%</div>
+                <div><div class="progress-bar"><div class="progress-fill" id="completed-bar" style="width: 0%;"></div></div></div>
+            </div>
+            <div class="table-row" id="stage-leads">
+                <div>Leads Generated</div>
+                <div id="leads-count">0</div>
+                <div id="leads-rate">0%</div>
+                <div><div class="progress-bar"><div class="progress-fill" id="leads-bar" style="width: 0%;"></div></div></div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <h2 class="section-title">Performance Metrics</h2>
+        <div class="charts-grid">
+            <div class="chart-container">
+                <canvas id="funnel-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="abandonment-chart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Abandonment Details -->
+        <h2 class="section-title">Abandonment by Question</h2>
+        <div class="table-container">
+            <div class="abandonment-header">
+                <div>Question ID</div>
+                <div>Views</div>
+                <div>Abandonments</div>
+                <div>Abandon Rate</div>
+                <div>Avg Time (s)</div>
+            </div>
+            <div id="abandonment-list"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Load analytics from API
+        async function loadAnalytics() {
+            const quizId = new URLSearchParams(window.location.search).get('quiz_id') || 'demo';
+            
+            try {
+                const response = await fetch(`/api/quiz/${quizId}/analytics`);
+                const data = await response.json();
+                
+                // Update funnel metrics
+                const funnel = data.funnel;
+                document.getElementById('total-visitors').textContent = funnel.total_visits;
+                document.getElementById('quiz-started').textContent = funnel.quiz_starts;
+                document.getElementById('quiz-completed').textContent = funnel.quiz_completions;
+                document.getElementById('total-leads').textContent = funnel.total_leads;
+                
+                document.getElementById('visitors-count').textContent = funnel.total_visits;
+                document.getElementById('started-count').textContent = funnel.quiz_starts;
+                document.getElementById('started-rate').textContent = funnel.quiz_start_rate.toFixed(1) + '%';
+                document.getElementById('started-bar').style.width = funnel.quiz_start_rate + '%';
+                
+                document.getElementById('completed-count').textContent = funnel.quiz_completions;
+                document.getElementById('completed-rate').textContent = funnel.completion_rate.toFixed(1) + '%';
+                document.getElementById('completed-bar').style.width = Math.min(funnel.completion_rate, 100) + '%';
+                
+                document.getElementById('leads-count').textContent = funnel.total_leads;
+                document.getElementById('leads-rate').textContent = funnel.conversion_rate.toFixed(1) + '%';
+                document.getElementById('leads-bar').style.width = funnel.conversion_rate + '%';
+                
+                document.getElementById('start-rate').textContent = funnel.quiz_start_rate.toFixed(1) + '%';
+                document.getElementById('completion-rate').textContent = funnel.completion_rate.toFixed(1) + '%';
+                document.getElementById('conversion-rate').textContent = funnel.conversion_rate.toFixed(1) + '%';
+                
+                // Update abandonment table
+                const abandonmentList = document.getElementById('abandonment-list');
+                abandonmentList.innerHTML = '';
+                data.abandonment.forEach(item => {
+                    const badgeClass = item.abandon_rate > 25 ? 'badge-high' : item.abandon_rate > 10 ? 'badge-medium' : 'badge-low';
+                    const row = document.createElement('div');
+                    row.className = 'abandonment-row';
+                    row.innerHTML = `
+                        <div><strong>${item.question_id || 'Unknown'}</strong></div>
+                        <div>${item.views}</div>
+                        <div>${item.abandons}</div>
+                        <div><span class="badge ${badgeClass}">${item.abandon_rate.toFixed(1)}%</span></div>
+                        <div>${item.avg_time}s</div>
+                    `;
+                    abandonmentList.appendChild(row);
+                });
+                
+                // Funnel chart
+                const funnelCtx = document.getElementById('funnel-chart').getContext('2d');
+                new Chart(funnelCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Visitors', 'Started', 'Completed', 'Leads'],
+                        datasets: [{
+                            label: 'Count',
+                            data: [funnel.total_visits, funnel.quiz_starts, funnel.quiz_completions, funnel.total_leads],
+                            backgroundColor: ['#3b82f6', '#2563eb', '#1e40af', '#1e3a8a'],
+                            borderColor: '#1e40af',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: '#e2e8f0' } },
+                            title: { text: 'Conversion Funnel', color: '#e2e8f0' }
+                        },
+                        scales: {
+                            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                            x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                        }
+                    }
+                });
+                
+                // Abandonment chart
+                if (data.top_abandonment_questions.length > 0) {
+                    const abandonmentCtx = document.getElementById('abandonment-chart').getContext('2d');
+                    new Chart(abandonmentCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.top_abandonment_questions.map(q => `Q${q.question_order}`),
+                            datasets: [{
+                                label: 'Abandonment Rate (%)',
+                                data: data.top_abandonment_questions.map(q => q.abandon_rate),
+                                backgroundColor: ['#dc2626', '#f97316', '#eab308'],
+                                borderColor: '#dc2626',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#e2e8f0' } },
+                                title: { text: 'Top 3 Abandonment Questions', color: '#e2e8f0' }
+                            },
+                            scales: {
+                                y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, max: 100 },
+                                x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+        
+        // Load on page load and refresh every 10 seconds
+        loadAnalytics();
+        setInterval(loadAnalytics, 10000);
+    </script>
+</body>
+</html>
