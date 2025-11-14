@@ -49,7 +49,9 @@ export default function RootLayout({
   return (
     <html lang="pt" suppressHydrationWarning>
       <body className={`font-sans antialiased ${_geist.className}`} suppressHydrationWarning>
-        <Providers>{children}</Providers>
+        <div suppressHydrationWarning>
+          <Providers>{children}</Providers>
+        </div>
       </body>
     </html>
   )

@@ -23,7 +23,7 @@ export function LanguageSelector() {
   const currentLanguage = languages.find((lang) => lang.code === language) || languages[0]
 
   return (
-    <div ref={dropdownRef} style={{ position: "relative", display: "inline-block" }}>
+    <div ref={dropdownRef} style={{ position: "relative", display: "inline-block" }} suppressHydrationWarning>
       <button
         onClick={() => setIsOpen(!isOpen)}
         style={{

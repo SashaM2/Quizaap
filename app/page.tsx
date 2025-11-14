@@ -66,6 +66,7 @@ export default function LandingPage() {
           pointerEvents: "none",
           zIndex: 0,
         }}
+        suppressHydrationWarning
       />
       <style jsx>{`
         @keyframes fadeInUp {
@@ -277,8 +278,9 @@ export default function LandingPage() {
             justifyContent: "space-between",
             alignItems: "center",
           }}
+          suppressHydrationWarning
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }} suppressHydrationWarning>
             <div
               style={{
                 width: "44px",
@@ -310,7 +312,7 @@ export default function LandingPage() {
               Crivus QuizIQ
             </h1>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }} suppressHydrationWarning>
             <LanguageSelector />
               <Link
                 href="/auth/login"
@@ -344,13 +346,14 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 2rem", position: "relative", zIndex: 1 }}>
+      <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 2rem", position: "relative", zIndex: 1 }} suppressHydrationWarning>
         <div
           style={{
             padding: "10rem 0 8rem",
             textAlign: "center",
             position: "relative",
           }}
+          suppressHydrationWarning
         >
           <div
             className={mounted ? "fade-in-up delay-100" : ""}
@@ -488,6 +491,7 @@ export default function LandingPage() {
             borderRadius: "12px",
             marginTop: "4rem",
           }}
+          suppressHydrationWarning
         >
           <h3
             className={mounted && (visibleSections.has("features") || mounted) ? "fade-in-up delay-100" : mounted ? "scroll-animate" : ""}
@@ -511,6 +515,7 @@ export default function LandingPage() {
               margin: "0 auto",
               padding: "0 2rem",
             }}
+            suppressHydrationWarning
           >
             {/* Feature 1 */}
             <div
@@ -793,6 +798,7 @@ export default function LandingPage() {
             border: "1px solid #e5e7eb",
             boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
           }}
+          suppressHydrationWarning
         >
           <h3
             className={mounted && (visibleSections.has("how-it-works") || mounted) ? "fade-in-up delay-100" : mounted ? "scroll-animate" : ""}
@@ -808,8 +814,8 @@ export default function LandingPage() {
           >
             {t("landing.howItWorks.title")}
           </h3>
-          <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 2rem" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
+          <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 2rem" }} suppressHydrationWarning>
+            <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }} suppressHydrationWarning>
               <div
                 className={mounted && (visibleSections.has("how-it-works") || mounted) ? "fade-in-up delay-200" : mounted ? "scroll-animate" : ""}
                 style={{
@@ -837,7 +843,7 @@ export default function LandingPage() {
                 >
                   1
                 </div>
-                <div>
+                <div suppressHydrationWarning>
                   <h4 style={{ fontSize: "1.5rem", fontWeight: 600, color: "#111827", marginBottom: "0.5rem", margin: 0 }}>
                     {t("landing.howItWorks.step1.title")}
                   </h4>
@@ -873,7 +879,7 @@ export default function LandingPage() {
                 >
                   2
                 </div>
-                <div>
+                <div suppressHydrationWarning>
                   <h4 style={{ fontSize: "1.5rem", fontWeight: 600, color: "#111827", marginBottom: "0.5rem", margin: 0 }}>
                     {t("landing.howItWorks.step2.title")}
                   </h4>
@@ -909,7 +915,7 @@ export default function LandingPage() {
                 >
                   3
                 </div>
-                <div>
+                <div suppressHydrationWarning>
                   <h4 style={{ fontSize: "1.5rem", fontWeight: 600, color: "#111827", marginBottom: "0.5rem", margin: 0 }}>
                     {t("landing.howItWorks.step3.title")}
                   </h4>
@@ -930,6 +936,7 @@ export default function LandingPage() {
             borderRadius: "32px",
             marginTop: "6rem",
           }}
+          suppressHydrationWarning
         >
           <div
             style={{
@@ -939,6 +946,7 @@ export default function LandingPage() {
               maxWidth: "1000px",
               margin: "0 auto",
             }}
+            suppressHydrationWarning
           >
             <div className={mounted ? "fade-in-up delay-100" : ""} style={{ textAlign: "center" }} suppressHydrationWarning>
               <div style={{ fontSize: "3.5rem", fontWeight: 800, color: "#111827", marginBottom: "0.5rem", lineHeight: 1 }} suppressHydrationWarning>
@@ -977,6 +985,7 @@ export default function LandingPage() {
             background: "#f9fafb",
             borderRadius: "12px",
           }}
+          suppressHydrationWarning
         >
           <h3
             className={mounted && (visibleSections.has("benefits") || mounted) ? "fade-in-up delay-100" : mounted ? "scroll-animate" : ""}
@@ -1000,6 +1009,7 @@ export default function LandingPage() {
               margin: "0 auto",
               padding: "0 2rem",
             }}
+            suppressHydrationWarning
           >
             <div
               className={`${mounted && (visibleSections.has("benefits") || mounted) ? "fade-in-up delay-200" : mounted ? "scroll-animate" : ""} card-hover`}
@@ -1264,6 +1274,7 @@ export default function LandingPage() {
             padding: "6rem 0",
             textAlign: "center",
           }}
+          suppressHydrationWarning
         >
           <h3
             className={mounted ? "fade-in-up delay-100" : ""}
@@ -1332,7 +1343,7 @@ export default function LandingPage() {
         }}
         suppressHydrationWarning
       >
-        <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "1400px", margin: "0 auto" }} suppressHydrationWarning>
           <p style={{ color: "#9ca3af", fontSize: "0.875rem", margin: 0 }} suppressHydrationWarning>
             {t("landing.footer.copyright")}
           </p>
