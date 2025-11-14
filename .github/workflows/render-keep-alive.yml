@@ -1,0 +1,32 @@
+name: Render Keep-Alive
+
+on:
+  schedule:
+    # Executa a cada 10 minutos
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Keep Render alive
+        run: pnpm exec tsx scripts/utils/render-keep-alive-simple.ts
+

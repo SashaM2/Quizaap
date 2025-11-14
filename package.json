@@ -16,7 +16,10 @@
     "fix:profiles": "tsx scripts/utils/criar-perfis-faltantes.ts",
     "keep-alive": "tsx scripts/utils/keep-alive-standalone.ts",
     "keep-alive:install": "powershell -ExecutionPolicy Bypass -File scripts/utils/install-keep-alive.ps1",
-    "keep-alive:uninstall": "powershell -ExecutionPolicy Bypass -File scripts/utils/install-keep-alive.ps1 -Uninstall"
+    "keep-alive:uninstall": "powershell -ExecutionPolicy Bypass -File scripts/utils/install-keep-alive.ps1 -Uninstall",
+    "render:keep-alive": "tsx scripts/utils/render-keep-alive.ts",
+    "render:keep-alive:install": "powershell -ExecutionPolicy Bypass -File scripts/utils/install-render-keep-alive.ps1",
+    "render:keep-alive:uninstall": "powershell -ExecutionPolicy Bypass -File scripts/utils/install-render-keep-alive.ps1 -Uninstall"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
