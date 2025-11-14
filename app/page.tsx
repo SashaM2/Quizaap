@@ -360,6 +360,7 @@ export default function LandingPage() {
             style={{
               marginBottom: "2rem",
             }}
+            suppressHydrationWarning
           >
             <h2
               style={{
@@ -547,6 +548,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="20" x2="18" y2="10" />
@@ -592,6 +594,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -638,6 +641,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
@@ -681,6 +685,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -725,6 +730,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="1" x2="12" y2="23" />
@@ -769,6 +775,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="20" x2="12" y2="10" />
@@ -1040,6 +1047,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
@@ -1081,6 +1089,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -1123,6 +1132,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="20" x2="18" y2="10" />
@@ -1166,6 +1176,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
@@ -1208,6 +1219,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -1251,6 +1263,7 @@ export default function LandingPage() {
                   justifyContent: "center",
                   marginBottom: "1.25rem",
                 }}
+                suppressHydrationWarning
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />

@@ -1,22 +1,10 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
 
-// Optimize font loading
-const _geist = Geist({ 
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
-  variable: "--font-geist",
-})
-const _geistMono = Geist_Mono({ 
-  subsets: ["latin"],
-  display: "swap",
-  preload: false,
-  variable: "--font-geist-mono",
-})
+// Use system fonts for better performance and to avoid Google Fonts download issues
+// This eliminates the delay from font downloads
 
 export const metadata: Metadata = {
   title: "Crivus QuizIQ",
@@ -48,7 +36,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt" suppressHydrationWarning>
-      <body className={`font-sans antialiased ${_geist.className}`} suppressHydrationWarning>
+      <body 
+        className="font-sans antialiased" 
+        style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
+        suppressHydrationWarning
+      >
         <div suppressHydrationWarning>
           <Providers>{children}</Providers>
         </div>
